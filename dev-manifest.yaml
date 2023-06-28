@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nathan-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nathan-api
+  template:
+    metadata:
+      Labels:
+        app: nathan-api
+    spec:
+      containers:
+      - name: nathan-api
+        image: us-docker.pkg.dev/kubernets-cluster-389915/nathan-api/api-tests
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            cpu: ".5"
+            memory: "500Mi"
+          requests:
+            cpu: ".25"
+            memory: "250Mi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+              scheme: HTTP
+            failureThreshold: 1
+            periodSeconds: 10
+            timeoutSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /
+              port: 3000
+              scheme: 3000
+            failureThreshold: 30
+            periodSeconds: 10
+            timeoutSeconds: 10
